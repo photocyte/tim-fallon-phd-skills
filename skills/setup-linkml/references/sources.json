@@ -1,0 +1,16 @@
+{
+  "linkml": {
+    "url": "https://github.com/linkml/linkml.git",
+    "version": "v1.12.1",
+    "commit": "bd102062b8406f5ba196f216dc11cae945dec317",
+    "patterns": ["/docs/**", "!/docs/developers/", "!/docs/maintainers/", "!/docs/get-involved/", "!*.png", "!*.jpg", "!*.jpeg", "!*.gif", "!*.svg", "!*.pdf", "!*.ipynb", "!*.ico", "/SPECIFICATION.md", "/LICENSE", "/pyproject.toml"],
+    "required": ["docs/schemas/arrays.md", "docs/schemas/inlining.md", "docs/generators/json-schema.rst", "docs/cli/validate.md", "SPECIFICATION.md"]
+  },
+  "linkml-model": {
+    "url": "https://github.com/linkml/linkml-model.git",
+    "version": "v1.12.0",
+    "commit": "7ed5ce72378213973f49810a3d2ac6d7241d5554",
+    "patterns": ["/linkml_model/model/schema/*.yaml", "/linkml_model/model/docs/specification/*.md", "/LICENSE", "/pyproject.toml"],
+    "required": ["linkml_model/model/schema/meta.yaml", "linkml_model/model/schema/array.yaml", "linkml_model/model/docs/specification/05validation.md"]
+  }
+}
