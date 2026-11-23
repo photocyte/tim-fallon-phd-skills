@@ -32,4 +32,4 @@ Under `seqera.path`, search `llms.txt` for the page title or URL. Match the prod
 
 For a live check, follow the index’s Markdown link or append `.md` to the page path. Verify the heading and identify the page as live when comparing it with the pinned manual. [Example Markdown page for AWS Batch custom AMIs](https://docs.seqera.io/nextflow/guides/aws-custom-ami.md)
 
-For historical questions about upstream contributor practices, the setup skill links the [final development constitution and its removal PR](../setup-nextflow-docs/SKILL.md#contributor-history).
+For the historical dataflow principles, read the excerpt at `nextflow.constitution_section_iii` relative to the manifest. For broader contributor history, the setup skill links the [final development constitution and its removal PR](../setup-nextflow-docs/SKILL.md#contributor-history).

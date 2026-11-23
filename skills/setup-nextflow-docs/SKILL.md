@@ -11,11 +11,11 @@ From the project where you want the cache, run the helper with Python 3, Git and
 python3 /path/to/setup-nextflow-docs/scripts/setup_docs.py
 ```
 
-The first run writes `.tools/nextflow-docs/manifest.json`. Paths in the manifest are relative to the cache root. Use `--cache DIR` to choose another location. Keep the cache in an ignored or external directory. Rerunning setup upgrades an older docs-only checkout in place. The first upgrade needs network access to fetch any missing constitution and agent skills. Subsequent reruns verify both checkouts and both export hashes offline.
+The first run writes `.tools/nextflow-docs/manifest.json`. Paths in the manifest are relative to the cache root. Use `--cache DIR` to choose another location. Keep the cache in an ignored or external directory. Rerunning setup upgrades an older docs-only checkout in place. Setup copies the bundled, release-matched constitution excerpt locally. Fetching missing agent skills requires network access. Subsequent reruns verify both checkouts and both export hashes offline.
 
 For questions about workflow syntax, configuration, execution or troubleshooting, use the companion [nextflow-docs](../nextflow-docs/SKILL.md) skill to search and cite the cache.
 
-To change the release baseline, resolve the intended official release tag to its commit, update `TAG` and `COMMIT` in the helper together, and rerun. The previous checkout remains available.
+To change the release baseline, resolve the intended official release tag to its commit, update `TAG` and `COMMIT` together, copy section III from that revision into `references/constitution-iii-<commit>.md`, and rerun. The previous checkout remains available.
 
 ## Local Nextflow agent skills
 
@@ -23,7 +23,7 @@ The manifest’s `agent_skills.path` points directly to the skill folders in a c
 
 ## Contributor history
 
-Read `.specify/memory/constitution.md` under the manifest’s `nextflow.path`. Nextflow’s final development constitution records the project’s principles for architecture, testing and releases. The copy in `v26.10.7` matches the last version on `master` before the maintainers removed Spec Kit. Their October 2026 PR explains the removal, the switch to a shorter `AGENTS.md`, and the move of design records under `docs/`. [Final constitution](https://github.com/nextflow-io/nextflow/blob/0ad848ef3c3a22824cd9eb2ca14568385867702d/.specify/memory/constitution.md) · [PR #7970](https://github.com/nextflow-io/nextflow/pull/7970)
+Read the file at `nextflow.constitution_section_iii` relative to the manifest. It contains “III. Dataflow Programming Model,” including its rationale, excerpted from `.specify/memory/constitution.md`. The copy in `v26.10.7` matches the last version on `master` before the maintainers removed Spec Kit. Their October 2026 PR explains the removal, the switch to a shorter `AGENTS.md`, and the move of design records under `docs/`. [Final constitution](https://github.com/nextflow-io/nextflow/blob/0ad848ef3c3a22824cd9eb2ca14568385867702d/.specify/memory/constitution.md) · [PR #7970](https://github.com/nextflow-io/nextflow/pull/7970)
 
 ## Check what changed
 

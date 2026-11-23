@@ -18,8 +18,8 @@ SKILLS_COMMIT = "d5700676b234f52cbc693466eb8d355783fc83fb"
 SKILLS_DIR = Path("plugins/nextflow/skills")
 EXPORTS = ("llms.txt", "llms-full.txt")
 CONSTITUTION = ".specify/memory/constitution.md"
-LEGACY_DOCS = ["/docs/", "!/docs/_static/"]
-DOCS = [*LEGACY_DOCS, f"/{CONSTITUTION}"]
+DOCS = ["/docs/", "!/docs/_static/"]
+FULL_CONSTITUTION_DOCS = [*DOCS, f"/{CONSTITUTION}"]
 
 
 def git(repo, *args):
@@ -40,21 +40,30 @@ def release_docs(cache, stage, refresh):
         git(repo, "fetch", "--quiet", "--depth=1", "--filter=blob:none", "origin", f"refs/tags/{TAG}")
         if git(repo, "rev-parse", "FETCH_HEAD^{commit}") != COMMIT:
             raise ValueError(f"{TAG} no longer matches {COMMIT}")
+    snippet = f"constitution-iii-{COMMIT}.md"
+    source = Path(__file__).resolve().parents[1] / "references" / snippet
+    content = source.read_bytes()
+    cached = cache / snippet
+    if cached.exists() and cached.read_bytes() != content:
+        raise ValueError(f"Modified constitution excerpt: {cached}. Preserve it and use a fresh cache.")
     if fresh:
         git(repo, "sparse-checkout", "set", "--no-cone", *DOCS)
         git(repo, "checkout", "--quiet", "--detach", COMMIT)
-    elif (git(repo, "sparse-checkout", "list").splitlines() == LEGACY_DOCS
+    elif (git(repo, "sparse-checkout", "list").splitlines() == FULL_CONSTITUTION_DOCS
           and git(repo, "rev-parse", "HEAD") == COMMIT and not git(repo, "status", "--porcelain")):
-        # Fetch the previously omitted blob before changing the existing checkout.
-        git(repo, "cat-file", "-e", f"{COMMIT}:{CONSTITUTION}")
         git(repo, "sparse-checkout", "set", "--no-cone", *DOCS)
     if (git(repo, "rev-parse", "HEAD") != COMMIT or git(repo, "status", "--porcelain")
             or git(repo, "sparse-checkout", "list").splitlines() != DOCS
-            or not (repo / "docs/index.mdx").is_file() or not (repo / CONSTITUTION).is_file()):
+            or not (repo / "docs/index.mdx").is_file() or (repo / CONSTITUTION).exists()):
         raise ValueError(f"Release checkout changed or incomplete: {repo}. Preserve it and use a fresh cache.")
     if fresh:
         repo.rename(path)
-    return {"url": REPO, "release": TAG, "commit": COMMIT, "path": path.name}
+    if not cached.exists():
+        staged = stage / snippet
+        staged.write_bytes(content)
+        staged.replace(cached)
+    return {"url": REPO, "release": TAG, "commit": COMMIT, "path": path.name,
+            "constitution_section_iii": snippet}
 
 
 def agent_skills(cache, stage):
