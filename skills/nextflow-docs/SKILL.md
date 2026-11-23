@@ -20,6 +20,12 @@ rg -n -C 2 'matching hash|exit code' "$release_dir/docs/cache-and-resume.mdx"
 
 Explain the conditions that apply to the user’s case. Cite the release and link to the supporting lines using `https://github.com/nextflow-io/nextflow/blob/<nextflow.commit>/docs/<file>#L<line>`.
 
+## Migrate an existing pipeline
+
+For a requested migration, start with Nextflow’s **migrate-nextflow-code** skill. It covers strict syntax, topic channels, static typing, workflow outputs and pipeline composition. Check its Nextflow and nf-core template prerequisites against the project. Use the release-matched manual for syntax questions, run the lint checks, and compare pipeline results before and after the migration. [migrate-nextflow-code instructions](https://github.com/nextflow-io/agent-skills/blob/master/skills/migrate-nextflow-code/SKILL.md)
+
+For installing Nextflow, creating or launching a workflow, or running a module, consult the corresponding upstream skill. [Nextflow agent skills catalog](https://github.com/nextflow-io/agent-skills/tree/master/skills)
+
 ## Look up a published Seqera page
 
 Under `seqera.path`, search `llms.txt` for the page title or URL. Match the product in the URL: Nextflow and Seqera Platform have separate guides on topics such as caching. Find the matching heading in `llms-full.txt` and read the surrounding passage. Cite the page and the snapshot’s `seqera.retrieved_at`; include the export’s SHA-256 from `seqera.files` when identifying exact text.
