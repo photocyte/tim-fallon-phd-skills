@@ -22,9 +22,9 @@ Explain the conditions that apply to the user’s case. Cite the release and lin
 
 ## Migrate an existing pipeline
 
-For a requested migration, start with Nextflow’s **migrate-nextflow-code** skill. It covers strict syntax, topic channels, static typing, workflow outputs and pipeline composition. Check its Nextflow and nf-core template prerequisites against the project. Use the release-matched manual for syntax questions, run the lint checks, and compare pipeline results before and after the migration. [migrate-nextflow-code instructions](https://github.com/nextflow-io/agent-skills/blob/master/skills/migrate-nextflow-code/SKILL.md)
+For a requested migration, read `migrate-nextflow-code/SKILL.md` under the manifest’s `agent_skills.path`. It covers strict syntax, topic channels, static typing, workflow outputs and pipeline composition. Check its Nextflow and nf-core template prerequisites against the project. Use the release-matched manual for syntax questions, run the lint checks, and compare pipeline results before and after the migration. [migrate-nextflow-code instructions](https://github.com/seqeralabs/nextflow-plugin/blob/d5700676b234f52cbc693466eb8d355783fc83fb/plugins/nextflow/skills/migrate-nextflow-code/SKILL.md)
 
-For installing Nextflow, creating or launching a workflow, or running a module, consult the corresponding upstream skill. [Nextflow agent skills catalog](https://github.com/nextflow-io/agent-skills/tree/master/skills)
+For installing Nextflow, creating or launching a workflow, or running a module, read the matching local skill under `agent_skills.path`. [Nextflow agent skills catalog](https://github.com/seqeralabs/nextflow-plugin/tree/d5700676b234f52cbc693466eb8d355783fc83fb/plugins/nextflow/skills)
 
 ## Look up a published Seqera page
 

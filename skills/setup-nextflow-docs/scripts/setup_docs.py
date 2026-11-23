@@ -13,8 +13,13 @@ from pathlib import Path
 REPO = "https://github.com/nextflow-io/nextflow.git"
 TAG = "v26.10.7"
 COMMIT = "0ad848ef3c3a22824cd9eb2ca14568385867702d"
+SKILLS_REPO = "https://github.com/seqeralabs/nextflow-plugin.git"
+SKILLS_COMMIT = "d5700676b234f52cbc693466eb8d355783fc83fb"
+SKILLS_DIR = Path("plugins/nextflow/skills")
 EXPORTS = ("llms.txt", "llms-full.txt")
-DOCS = ["/docs/", "!/docs/_static/"]
+CONSTITUTION = ".specify/memory/constitution.md"
+LEGACY_DOCS = ["/docs/", "!/docs/_static/"]
+DOCS = [*LEGACY_DOCS, f"/{CONSTITUTION}"]
 
 
 def git(repo, *args):
@@ -38,13 +43,37 @@ def release_docs(cache, stage, refresh):
     if fresh:
         git(repo, "sparse-checkout", "set", "--no-cone", *DOCS)
         git(repo, "checkout", "--quiet", "--detach", COMMIT)
+    elif (git(repo, "sparse-checkout", "list").splitlines() == LEGACY_DOCS
+          and git(repo, "rev-parse", "HEAD") == COMMIT and not git(repo, "status", "--porcelain")):
+        # Fetch the previously omitted blob before changing the existing checkout.
+        git(repo, "cat-file", "-e", f"{COMMIT}:{CONSTITUTION}")
+        git(repo, "sparse-checkout", "set", "--no-cone", *DOCS)
     if (git(repo, "rev-parse", "HEAD") != COMMIT or git(repo, "status", "--porcelain")
             or git(repo, "sparse-checkout", "list").splitlines() != DOCS
-            or not (repo / "docs/index.mdx").is_file()):
+            or not (repo / "docs/index.mdx").is_file() or not (repo / CONSTITUTION).is_file()):
         raise ValueError(f"Release checkout changed or incomplete: {repo}. Preserve it and use a fresh cache.")
     if fresh:
         repo.rename(path)
     return {"url": REPO, "release": TAG, "commit": COMMIT, "path": path.name}
+
+
+def agent_skills(cache, stage):
+    path = cache / f"nextflow-plugin-{SKILLS_COMMIT}"
+    fresh = not path.exists()
+    repo = stage / "plugin" if fresh else path
+    if fresh:
+        repo.mkdir()
+        git(repo, "init", "--quiet")
+        git(repo, "remote", "add", "origin", SKILLS_REPO)
+        git(repo, "fetch", "--quiet", "--depth=1", "origin", SKILLS_COMMIT)
+        git(repo, "checkout", "--quiet", "--detach", SKILLS_COMMIT)
+    if (git(repo, "remote", "get-url", "origin") != SKILLS_REPO
+            or git(repo, "rev-parse", "HEAD") != SKILLS_COMMIT or git(repo, "status", "--porcelain")
+            or not (repo / SKILLS_DIR / "migrate-nextflow-code/SKILL.md").is_file()):
+        raise ValueError(f"Agent skills checkout changed or incomplete: {repo}. Preserve it and use a fresh cache.")
+    if fresh:
+        repo.rename(path)
+    return {"url": SKILLS_REPO, "commit": SKILLS_COMMIT, "path": str(Path(path.name) / SKILLS_DIR)}
 
 
 def checksum(path):
@@ -95,13 +124,14 @@ def setup(cache, refresh):
     with tempfile.TemporaryDirectory(dir=cache) as temp:
         stage = Path(temp)
         release = release_docs(cache, stage, refresh)
-        if previous and not refresh and old["nextflow"] == release:
+        skills = agent_skills(cache, stage)
+        if previous and not refresh and old["nextflow"] == release and old.get("agent_skills") == skills:
             print(f"Reused offline: {manifest}")
             return
         now = datetime.now(timezone.utc)
         snapshot = fetch_snapshot(cache, stage, previous, now) if refresh or not previous else previous
         checked = now.isoformat() if refresh or not previous else old["seqera_checked_at"]
-        record = {"nextflow": release, "seqera": snapshot, "seqera_checked_at": checked}
+        record = {"nextflow": release, "agent_skills": skills, "seqera": snapshot, "seqera_checked_at": checked}
         staged = stage / "manifest.json"
         staged.write_text(json.dumps(record, indent=2) + "\n")
         staged.replace(manifest)
