@@ -19,6 +19,10 @@ The first run writes `.tools/nextflow-docs/manifest.json`. Paths in the manifest
 - **Published page or cross-product lookup.** Search the saved `llms.txt` index for a title or URL. For Nextflow, its page links contain `/nextflow/`. Search `llms-full.txt` for relevant headings and read the surrounding passage. These are rolling, multi-product exports. Cite the export URL, retrieval date and SHA-256 from the snapshot when its exact content matters.
 - **One live Markdown page.** Follow the index’s `.md` link, or append `.md` to a Seqera documentation page path. For example, `curl -fsSL https://docs.seqera.io/nextflow/guides/aws-custom-ami.md` retrieves the AWS Batch custom AMI guide directly. Check for the expected heading. This reads the live page, which can change independently of your saved exports and release checkout.
 
+## Contributor history
+
+Nextflow’s final development constitution records the project’s principles for architecture, testing and releases. The copy in `v26.10.7` matches the last version on `master` before the maintainers removed Spec Kit. Their October 2026 PR explains the removal, the switch to a shorter `AGENTS.md`, and the move of design records under `docs/`. [Final constitution](https://github.com/nextflow-io/nextflow/blob/0ad848ef3c3a22824cd9eb2ca14568385867702d/.specify/memory/constitution.md) · [PR #7970](https://github.com/nextflow-io/nextflow/pull/7970)
+
 ## Check what changed
 
 Rerun the same command with `--refresh` to verify the pinned tag and fetch both Seqera exports. The helper reports which files changed. When either changes, it keeps the old pair and saves a new dated pair. An unchanged refresh records the check time and reuses the current snapshot. A failed fetch leaves the active manifest intact.
